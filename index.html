@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marginalia · Books & the PhD Years</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Caveat:wght@500;700&display=swap');
+
+:root{
+  --paper: #f3ecdd;
+  --paper-deep: #ece2cd;
+  --ink: #2b2620;
+  --ink-soft: #5c5346;
+  --ink-faint: #948a78;
+  --burgundy: #7a2e2e;
+  --moss: #4c5b3f;
+  --gold: #a9822f;
+  --rule: rgba(43,38,32,0.16);
+  --shadow: rgba(43,38,32,0.25);
+}
+
+*{box-sizing:border-box; margin:0; padding:0;}
+
+body{
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(169,130,47,0.07), transparent 55%),
+    radial-gradient(ellipse at 90% 100%, rgba(122,46,46,0.06), transparent 50%),
+    var(--paper);
+  color: var(--ink);
+  font-family: 'Cormorant Garamond', serif;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  z-index: 1;
+}
+
+.page{ position: relative; z-index: 2; max-width: 920px; margin: 0 auto; padding: 64px 28px 120px; }
+
+header{ text-align:center; margin-bottom: 56px; position: relative; }
+.mark{
+  font-family: 'Caveat', cursive;
+  font-size: 2.6rem;
+  font-weight: 700;
+  color: var(--burgundy);
+  display:block;
+  margin-bottom: 4px;
+  transform: rotate(-2deg);
+}
+h1{
+  font-family: 'Playfair Display', serif;
+  font-weight: 900;
+  font-size: 2.5rem;
+  letter-spacing: 0.03em;
+  color: var(--ink);
+}
+.subtitle{
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  color: var(--ink-soft);
+  font-size: 1.2rem;
+  letter-spacing: 0.02em;
+  margin-top: 10px;
+}
+.divider{
+  width: 70px; height: 2px; background: var(--gold);
+  margin: 22px auto 0; position: relative;
+}
+.divider::before, .divider::after{
+  content:"◆"; color: var(--gold); font-size: 0.6rem;
+  position:absolute; top:50%; transform: translateY(-50%);
+}
+.divider::before{ left: -18px; }
+.divider::after{ right: -18px; }
+
+nav{ display:flex; justify-content:center; gap: 8px; margin-bottom: 48px; flex-wrap: wrap; }
+.tab{
+  font-family: 'Playfair Display', serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  padding: 10px 26px;
+  background: transparent;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+}
+.tab:hover{ color: var(--ink); border-color: var(--ink-faint); }
+.tab.active{
+  color: var(--paper);
+  background: var(--ink);
+  border-color: var(--ink);
+}
+.tab .count{
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  opacity: 0.65;
+  margin-left: 6px;
+  font-size: 0.85rem;
+}
+
+.entries{ display:flex; flex-direction:column; gap: 34px; }
+.status-msg{ text-align:center; color: var(--ink-faint); font-style: italic; padding: 40px 0; }
+.status-msg.error{ color: var(--burgundy); }
+
+.entry{
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  padding: 30px 34px;
+  position: relative;
+  box-shadow: 0 3px 0 var(--rule);
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: rise 0.6s ease backwards;
+}
+.entry:hover{ transform: translateY(-3px); box-shadow: 0 8px 18px var(--shadow); }
+@keyframes rise{ from{ opacity:0; transform: translateY(14px);} to{opacity:1; transform:none;} }
+
+.entry-kind{
+  position:absolute; top: -12px; left: 30px;
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 0.68rem;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 3px 12px;
+  color: var(--paper);
+  background: var(--burgundy);
+}
+.entry-kind.life{ background: var(--moss); }
+
+.entry-meta{
+  display:flex; align-items:baseline; gap: 14px; margin-bottom: 10px; margin-top: 6px;
+  font-size: 0.92rem; color: var(--ink-faint); font-style: italic;
+}
+.entry-title{
+  font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1.5rem;
+  color: var(--ink); margin-bottom: 12px; line-height: 1.4;
+}
+.entry-excerpt{
+  font-size: 1.12rem; line-height: 1.85; color: var(--ink-soft);
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.entry-tags{ margin-top: 16px; display:flex; gap:8px; flex-wrap:wrap; }
+.tag{
+  font-size: 0.78rem; letter-spacing: 0.04em; color: var(--gold);
+  border: 1px solid rgba(169,130,47,0.4); padding: 2px 10px; border-radius: 10px;
+}
+
+.book-info{
+  font-size: 0.95rem; color: var(--burgundy); font-style: italic; margin-bottom: 8px;
+}
+
+.overlay{
+  position: fixed; inset:0; background: rgba(43,38,32,0.55);
+  display:none; align-items:flex-start; justify-content:center;
+  padding: 50px 20px; overflow-y:auto; z-index: 50;
+  backdrop-filter: blur(2px);
+}
+.overlay.open{ display:flex; }
+.detail{
+  background: var(--paper);
+  max-width: 700px; width:100%;
+  padding: 48px 46px 56px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+  animation: pop 0.35s ease;
+}
+@keyframes pop{ from{opacity:0; transform: translateY(20px) scale(0.98);} to{opacity:1; transform:none;} }
+.close-btn{
+  position:absolute; top: 18px; right: 22px;
+  font-family: 'Cormorant Garamond', serif; font-size: 1.6rem;
+  color: var(--ink-faint); background:none; border:none; cursor:pointer;
+  transition: color 0.2s;
+}
+.close-btn:hover{ color: var(--burgundy); }
+.detail-title{
+  font-family:'Playfair Display', serif; font-weight: 900; font-size: 1.9rem;
+  color: var(--ink); margin-bottom: 8px; padding-right: 30px; line-height:1.4;
+}
+.detail-meta{ font-style: italic; color: var(--ink-faint); margin-bottom: 26px; font-size: 0.95rem; }
+.detail-body{ font-size: 1.15rem; line-height: 1.95; color: var(--ink-soft); }
+.detail-body h1, .detail-body h2, .detail-body h3{
+  font-family:'Playfair Display', serif; color: var(--ink); margin: 24px 0 10px; font-weight:700;
+}
+.detail-body p{ margin-bottom: 16px; }
+.detail-body blockquote{
+  border-left: 3px solid var(--gold); padding-left: 18px; margin: 18px 0;
+  font-style: italic; color: var(--ink-soft);
+}
+.detail-body code{ background: var(--paper-deep); padding: 1px 6px; font-size: 0.95em; }
+.detail-body ul, .detail-body ol{ margin: 10px 0 16px 26px; }
+
+footer{
+  text-align:center; margin-top: 70px; color: var(--ink-faint);
+  font-style: italic; font-size: 0.9rem; letter-spacing: 0.02em;
+}
+
+@media (max-width: 600px){
+  h1{ font-size: 1.9rem; }
+  .entry{ padding: 24px 22px; }
+  .detail{ padding: 40px 22px 44px; }
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <span class="mark">Marginalia</span>
+    <h1>Books & the PhD Years</h1>
+    <p class="subtitle">notes on what I'm reading, and the long road of a doctorate</p>
+    <div class="divider"></div>
+  </header>
+
+  <nav id="tabs"></nav>
+  <div class="entries" id="entries">
+    <p class="status-msg">Loading entries…</p>
+  </div>
+
+  <footer>— every page, a step along the way —</footer>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="detail">
+    <button class="close-btn" id="closeBtn">✕ Close</button>
+    <div id="detailContent"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   HOW TO ADD A NEW POST
+   1. Create a new .md file inside /posts/, e.g.
+      posts/2026-08-01-my-new-post.md
+      with this frontmatter at the top:
+
+      ---
+      kind: reading            (or: life)
+      title: Your title here
+      book: Author — Book Title   (omit this line for "life" posts)
+      date: 2026-08-01
+      tags: tag one, tag two
+      ---
+      Your content in Markdown goes here.
+
+   2. Add the filename to posts/manifest.json (just add it to the list).
+   That's it — nothing else in this file needs to change.
+
+   NOTE: because this page fetches files, it must be served over
+   http(s), not opened directly by double-clicking (file://).
+   Locally: run `python3 -m http.server` in this folder, then visit
+   http://localhost:8000. Once deployed (GitHub Pages, Netlify,
+   Vercel), it works normally as a real URL.
+   ============================================================ */
+
+const kindLabel = { reading: "Reading Notes", life: "PhD Life" };
+let posts = [];
+let activeKind = "all";
+
+function parsePost(raw, filename){
+  const match = raw.match(/^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/);
+  if(!match){
+    console.warn("Malformed frontmatter in", filename);
+    return null;
+  }
+  const [, fm, body] = match;
+  const meta = {};
+  fm.split("\n").forEach(line => {
+    const idx = line.indexOf(":");
+    if(idx === -1) return;
+    const key = line.slice(0, idx).trim();
+    const val = line.slice(idx + 1).trim();
+    meta[key] = val;
+  });
+  return {
+    kind: meta.kind || "life",
+    title: meta.title || filename,
+    book: meta.book || "",
+    date: meta.date || "",
+    tags: meta.tags ? meta.tags.split(",").map(t => t.trim()).filter(Boolean) : [],
+    content: body.trim()
+  };
+}
+
+async function loadPosts(){
+  const entriesEl = document.getElementById("entries");
+  try{
+    const manifestRes = await fetch("posts/manifest.json");
+    if(!manifestRes.ok) throw new Error("manifest fetch failed: " + manifestRes.status);
+    const filenames = await manifestRes.json();
+
+    const loaded = await Promise.all(filenames.map(async fn => {
+      const res = await fetch("posts/" + fn);
+      if(!res.ok){ console.warn("Failed to load", fn); return null; }
+      const raw = await res.text();
+      return parsePost(raw, fn);
+    }));
+
+    posts = loaded.filter(Boolean);
+    renderTabs();
+    renderEntries();
+  }catch(err){
+    console.error(err);
+    entriesEl.innerHTML = `<p class="status-msg error">
+      Couldn't load posts (${err.message}).<br>
+      This page needs to be served over http(s) — try running
+      <code>python3 -m http.server</code> in this folder and opening
+      http://localhost:8000, or deploy it to GitHub Pages / Netlify / Vercel.
+    </p>`;
+  }
+}
+
+function excerpt(md, len){
+  const plain = md.replace(/[#>*`_\[\]]/g, "").replace(/\n+/g," ").trim();
+  return plain.length > len ? plain.slice(0, len) + "…" : plain;
+}
+
+function renderTabs(){
+  const counts = { all: posts.length, reading: 0, life: 0 };
+  posts.forEach(p => counts[p.kind] = (counts[p.kind]||0) + 1);
+  const tabsEl = document.getElementById("tabs");
+  const defs = [
+    {k:"all", label:"All"},
+    {k:"reading", label:"Reading Notes"},
+    {k:"life", label:"PhD Life"}
+  ];
+  tabsEl.innerHTML = defs.map(d => `
+    <button class="tab ${activeKind===d.k?'active':''}" data-kind="${d.k}">
+      ${d.label}<span class="count">${counts[d.k]||0}</span>
+    </button>`).join("");
+  tabsEl.querySelectorAll(".tab").forEach(btn=>{
+    btn.addEventListener("click", ()=>{ activeKind = btn.dataset.kind; renderTabs(); renderEntries(); });
+  });
+}
+
+function renderEntries(){
+  const list = document.getElementById("entries");
+  const filtered = posts
+    .filter(p => activeKind==="all" || p.kind===activeKind)
+    .sort((a,b)=> new Date(b.date)-new Date(a.date));
+
+  if(filtered.length === 0){
+    list.innerHTML = `<p class="status-msg">Nothing here yet.</p>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map((p, i) => `
+    <article class="entry" style="animation-delay:${i*0.06}s" data-idx="${posts.indexOf(p)}">
+      <span class="entry-kind ${p.kind==='life'?'life':''}">${kindLabel[p.kind]||p.kind}</span>
+      ${p.book ? `<div class="book-info">📖 ${p.book}</div>` : ""}
+      <div class="entry-meta"><span>${p.date}</span></div>
+      <div class="entry-title">${p.title}</div>
+      <div class="entry-excerpt">${excerpt(p.content, 130)}</div>
+      <div class="entry-tags">${p.tags.map(t=>`<span class="tag">${t}</span>`).join("")}</div>
+    </article>
+  `).join("");
+
+  list.querySelectorAll(".entry").forEach(el=>{
+    el.addEventListener("click", ()=> openDetail(posts[el.dataset.idx]));
+  });
+}
+
+function openDetail(p){
+  const bodyHtml = marked.parse(p.content);
+  document.getElementById("detailContent").innerHTML = `
+    ${p.book ? `<div class="book-info">📖 ${p.book}</div>` : ""}
+    <div class="detail-title">${p.title}</div>
+    <div class="detail-meta">${kindLabel[p.kind]||p.kind} · ${p.date}</div>
+    <div class="detail-body">${bodyHtml}</div>
+  `;
+  document.getElementById("overlay").classList.add("open");
+}
+
+document.getElementById("closeBtn").addEventListener("click", ()=>{
+  document.getElementById("overlay").classList.remove("open");
+});
+document.getElementById("overlay").addEventListener("click", (e)=>{
+  if(e.target.id === "overlay") document.getElementById("overlay").classList.remove("open");
+});
+
+loadPosts();
+</script>
+</body>
+</html>
